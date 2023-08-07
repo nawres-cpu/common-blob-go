@@ -47,6 +47,7 @@ func NewCloudStorage(
 		AWSS3AccessKeyID:       awsS3AccessKeyID,
 		AWSS3SecretAccessKey:   awsS3SecretAccessKey,
 		AWSEnableS3Accelerate:  false,
+		MinIOSecure:            false,
 		GCPCredentialsJSON:     gcpCredentialsJSON,
 		GCPStorageEmulatorHost: gcpStorageEmulatorHost,
 	})
@@ -101,6 +102,21 @@ func NewCloudStorageWithOption(ctx context.Context, isTesting bool, bucketProvid
 		default:
 			// don't support implicit external configuration
 			return nil, fmt.Errorf("unable to create implicit GCP client without credentials")
+		}
+
+	case "minio":
+		if isTesting {
+			mc, err := NewMinIOCloudStorage(
+				cloudStorageOpts.MinIOEndpoint,
+				cloudStorageOpts.MinIOAccessKeyID,
+				cloudStorageOpts.MinIOSecretAccessKey,
+				bucketName,
+				cloudStorageOpts.MinIOSecure,
+			)
+			if err != nil {
+				return nil, err
+			}
+			return mc, nil
 		}
 
 	default:
@@ -227,4 +243,10 @@ type CloudStorageOption struct {
 
 	GCPCredentialsJSON     string
 	GCPStorageEmulatorHost string
+
+	MinIOEndpoint        string
+	MinIOAccessKeyID     string
+	MinIOSecretAccessKey string
+	MinIOBucketName      string
+	MinIOSecure          bool
 }
