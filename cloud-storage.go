@@ -122,6 +122,7 @@ func NewCloudStorageWithOption(ctx context.Context, isTesting bool, bucketProvid
 	default:
 		return nil, fmt.Errorf("unsupported Bucket Provider: %s", bucketProvider)
 	}
+	return nil, fmt.Errorf("unsupported Bucket Provider: %s", bucketProvider)
 }
 
 type CloudStorage interface {
