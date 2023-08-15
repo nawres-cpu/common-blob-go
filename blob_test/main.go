@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"log"
 
 	blob "github.com/AccelByte/common-blob-go"
 )
@@ -23,4 +24,11 @@ func main() {
 	}
 	storage.Exists(context.Background(), "buck")
 	storage.Get(context.Background(), "pk")
+	ctx := context.Background()
+	attrs, err := storage.Attributes(ctx, "go.mod")
+	if err != nil {
+		log.Fatal("Error getting attributes:", err)
+	}
+
+	log.Println("File Size:", attrs.Size)
 }
